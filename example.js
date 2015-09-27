@@ -1,26 +1,47 @@
 ; (function($,window,document,undefined){
     "use strict";
-    var pluginName = "myplugin";//更改插件名称
+    var pluginName = "myplugin";
     function Plugin(element,options){
-        this.element = $(element);//将封装好的jQuery对象赋给构造函数
+        this.element = $(element);
         this.options = $.extend({},Plugin.DEFAULTS,options);
         this.init();
     }
 	Plugin.DEFAULTS = {
 		//默认参数
+		value:'我是文本',
+		color:'pink',
+		size:18,
+		lHeight:1
 	};
     Plugin.prototype.init = function(){
         //初始化
-		this.element.fun();//业务逻辑区
+      this.element.html(this.options.value);
+      this.color().size().lHeight();//链式表达
     };
     Plugin.prototype.color = function(){
         if(!arguments.length){
-			//针对参数传入的是对象{key:value}时的情况
+		  this.element.css("color",this.options.color);
         }else{
-		  //针对参数传入的是方法，使用argument[0]获取参数值
+		  this.element.css("color",arguments[0]);//默认使用第一个参数作为需要替换的值 
         }
-        return this;//支持链式写法
+        return this;
 	};
+    Plugin.prototype.size = function(){
+        if(!arguments.length){ 
+		this.element.css("font-size",this.options.size);
+        }else{
+            this.element.css("font-size",arguments[0]); 
+        }
+        return this;        
+	};
+    Plugin.prototype.lHeight = function(){
+        if(!arguments.length){
+		  this.element.css("line-height",this.options.lHeight);            
+        }else{
+            this.element.css("line-height",arguments[0]);             
+        }
+        return this;        
+	}; 
     $.fn[pluginName] = function(){
         var options = arguments;
         return this.each(function(){
@@ -30,7 +51,7 @@
                 //如果没有实例，则初始化一个 
                 $this.data(pluginName,(new Plugin(this,options))); 
             }else if(typeof options[0] ==="string"){
-                var args = Array.prototype.slice.call(options,1); //将arguments对象转换为普通数组，并且去除掉方法名称，只剩下参数
+                var args = Array.prototype.slice.call(options,1); 
 				data[options[0]](args); 
 			}else if(typeof options ==="object" || !options){          
 				//如果已经实例化且参数为对象或者未填入参数，那么执行初始化
@@ -44,4 +65,15 @@
         });
     };
 	$.fn[pluginName].Constructor = Plugin;//重设插件构造器，可以通过该属性获取插件的真实类函数
-})(window.jQuery,window,document);
+})(window.jQuery,window,document); 
+
+
+
+// 调用方法
+
+
+$('p').myplugin();//init()
+$('p').myplugin({
+    key:value
+});
+$('p').myplugin('key','value');
