@@ -15,14 +15,21 @@
 	};
     Plugin.prototype.init = function(){
         //初始化
-      this.element.html(this.options.value);
-      this.color().size().lHeight();//链式表达
+      this.value().color().size().lHeight();//链式表达
     };
     Plugin.prototype.color = function(){
         if(!arguments.length){
 		  this.element.css("color",this.options.color);
         }else{
 		  this.element.css("color",arguments[0]);//默认使用第一个参数作为需要替换的值 
+        }
+        return this;
+	};
+    Plugin.prototype.value = function(){
+        if(!arguments.length){
+		  this.element.html(this.options.value);
+        }else{
+		  this.element.html(arguments[0]);//默认使用第一个参数作为需要替换的值 
         }
         return this;
 	};
@@ -48,15 +55,14 @@
             var $this = $(this),//把each方法里的每一个DOM对象转换为jQuery对象
 			    data = $this.data(pluginName);
             if(!$this.data(pluginName)){
-                //如果没有实例，则初始化一个 
-                $this.data(pluginName,(new Plugin(this,options))); 
+                //如果没有实例，则初始化一个
+                $this.data(pluginName,(new Plugin(this,options[0]))); 
             }else if(typeof options[0] ==="string"){
                 var args = Array.prototype.slice.call(options,1); 
 				data[options[0]](args); 
-			}else if(typeof options ==="object" || !options){          
+			}else if(typeof options[0] ==="object" || !options){ 
 				//如果已经实例化且参数为对象或者未填入参数，那么执行初始化
-                $this.data(pluginName,options);
-                data.options = $.extend({},Plugin.DEFAULTS,options);
+                data.options = $.extend({},Plugin.DEFAULTS,options[0]);
                 data.init();
 			}else{
 				//填入错误方法
@@ -67,13 +73,9 @@
 	$.fn[pluginName].Constructor = Plugin;//重设插件构造器，可以通过该属性获取插件的真实类函数
 })(window.jQuery,window,document); 
 
-
-
 // 调用方法
-
-
 $('p').myplugin();//init()
 $('p').myplugin({
     key:value
 });
-$('p').myplugin('key','value');
+$('p').myplugin('value',"this is text");//init()

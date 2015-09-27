@@ -11,9 +11,9 @@
 	};
     Plugin.prototype.init = function(){
         //初始化
-		this.element.fun();//业务逻辑区
+		this.fun();//业务逻辑区
     };
-    Plugin.prototype.color = function(){
+    Plugin.prototype.fun = function(){
         if(!arguments.length){
 			//针对参数传入的是对象{key:value}时的情况
         }else{
@@ -27,15 +27,14 @@
             var $this = $(this),//把each方法里的每一个DOM对象转换为jQuery对象
 			    data = $this.data(pluginName);
             if(!$this.data(pluginName)){
-                //如果没有实例，则初始化一个 
-                $this.data(pluginName,(new Plugin(this,options))); 
+                //如果没有实例，则初始化一个
+                $this.data(pluginName,(new Plugin(this,options[0]))); 
             }else if(typeof options[0] ==="string"){
-                var args = Array.prototype.slice.call(options,1); //将arguments对象转换为普通数组，并且去除掉方法名称，只剩下参数
+                var args = Array.prototype.slice.call(options,1); 
 				data[options[0]](args); 
-			}else if(typeof options ==="object" || !options){          
+			}else if(typeof options[0] ==="object" || !options){  
 				//如果已经实例化且参数为对象或者未填入参数，那么执行初始化
-                $this.data(pluginName,options);
-                data.options = $.extend({},Plugin.DEFAULTS,options);
+                data.options = $.extend({},Plugin.DEFAULTS,options[0]);
                 data.init();
 			}else{
 				//填入错误方法
