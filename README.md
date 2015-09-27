@@ -1,7 +1,7 @@
 # jQuery-Plugin-Template
 结合Lightweight Start模式，参考Bootstrap写出的jQuery模板
 ### 调用方法
-
+使用template.js文件
 #### 使用默认参数进行初始化
 ```
 $('p').myplugin();//init()
